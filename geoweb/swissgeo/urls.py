@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('slope/', views.slopes, name='slopes'),
+    path('slopes.json', views.slopesjson, name='slopesjson')
 ]

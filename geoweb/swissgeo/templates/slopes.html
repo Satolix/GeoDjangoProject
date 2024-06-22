@@ -1,29 +1,64 @@
-{% load leaflet_tags %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Slopes Map</title>
+    {% load leaflet_tags %}
     {% leaflet_js %}
     {% leaflet_css %}
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <h1>Slopes Map</h1>
-    <div id="map" style="height: 600px;"></div>
+    {% leaflet_map "map" callback="main_map_init" %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        function main_map_init(map, options) {
+            var dataurl = '{% url "slopesjson" %}';
+            $.getJSON(dataurl, function (data) {
+                var geojsonLayer = L.geoJson(data, {
+                    style: function (feature) {
+                        return {
+                            color: feature.properties.color || 'blue', // default color if none provided
+                            weight: 5, // Increase stroke width for larger hitbox
+                            opacity: 1
+                        };
+                    },
+                    onEachFeature: function (feature, layer) {
+                        if (feature.properties && feature.properties.name) {
+                            layer.bindPopup(
+                                `<b>${feature.properties.name}</b><br>` +
+                                `Difficulty: ${feature.properties.difficulty}`
+                            );
+                        }
 
-    <script>
-        // Initialize the map
-        var map = L.map('map').setView([46.8182, 8.2275], 8); // Adjust the coordinates and zoom level as needed
+                        // Add hover effect
+                        layer.on('mouseover', function (e) {
+                            var layer = e.target;
+                            layer.setStyle({
+                                weight: 7,
+                                color: 'yellow',
+                                opacity: 1
+                            });
+                            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                                layer.bringToFront();
+                            }
+                        });
 
-        // Add a tile layer to the map (e.g., OpenStreetMap tiles)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+                        layer.on('mouseout', function (e) {
+                            geojsonLayer.resetStyle(e.target); // Reset to original style
+                        });
 
-        // Load the GeoJSON data from the context
-        var geojsonData = {{ slopes_data|safe }};
-
-        // Add the GeoJSON data to the map
-        L.geoJSON(geojsonData).addTo(map);
+                        // Ensure the click event works
+                        layer.on('click', function (e) {
+                            layer.openPopup();
+                        });
+                    }
+                }).addTo(map);
+            });
+        }
     </script>
 </body>
 </html>
