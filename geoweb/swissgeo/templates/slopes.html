@@ -1,0 +1,29 @@
+{% load leaflet_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Slopes Map</title>
+    {% leaflet_js %}
+    {% leaflet_css %}
+</head>
+<body>
+    <h1>Slopes Map</h1>
+    <div id="map" style="height: 600px;"></div>
+
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([46.8182, 8.2275], 8); // Adjust the coordinates and zoom level as needed
+
+        // Add a tile layer to the map (e.g., OpenStreetMap tiles)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Load the GeoJSON data from the context
+        var geojsonData = {{ slopes_data|safe }};
+
+        // Add the GeoJSON data to the map
+        L.geoJSON(geojsonData).addTo(map);
+    </script>
+</body>
+</html>
