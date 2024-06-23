@@ -7,7 +7,6 @@ class Slope(models.Model):
     name = models.CharField(max_length=100)
     difficulty = models.CharField(max_length=100, choices=[('green', 'green'), ('blue', 'blue'), ('red', 'red'), ('black', 'black')], default='green')
     status = models.CharField(max_length=100, choices=[('open', 'open'), ('closed', 'closed')], default='closed')
-    type = models.CharField(max_length=100, choices=[('chairlift', 'chairlift'), ('gondola', 'gondola'), ('teleski', 'teleski')], default='chairlift')
     geom = models.LineStringField()
 
     class Meta:
@@ -25,6 +24,7 @@ class Lift(models.Model):
     name = models.CharField(max_length=100)
     capacity = models.IntegerField(default=2)
     geom = models.LineStringField()
+    type = models.CharField(max_length=100, choices=[('chairlift', 'chairlift'), ('gondola', 'gondola'), ('teleski', 'teleski')], default='chairlift')
     status = models.CharField(max_length=100, choices=[('open', 'open'), ('closed', 'closed')], default='closed')
 
     class Meta:
