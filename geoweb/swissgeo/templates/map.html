@@ -92,9 +92,10 @@
                 var liftsLayer = L.geoJson(data, {
                     style: function (feature) {
                         return {
-                            color: feature.properties.color || 'red', // default color if none provided
+                            color: feature.properties.color || 'black', // default color if none provided
                             weight: 3,
-                            opacity: 1
+                            opacity: 1,
+                            dashArray: '5, 5' // Sets the dashed line pattern
                         };
                     },
                     onEachFeature: function (feature, layer) {
