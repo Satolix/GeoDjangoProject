@@ -8,7 +8,7 @@ from .models import Slope
 def index(request):
     return HttpResponse("Hello, world. It works!")
 
-def slopes(request):
+def map(request):
     return render(request, 'slopes.html')
 
 def slopesjson(request):
