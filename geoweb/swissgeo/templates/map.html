@@ -46,12 +46,27 @@
                 return length;
             }
 
+            function getSlopeColor(difficulty) {
+                switch(difficulty) {
+                    case 'green':
+                        return 'green';
+                    case 'blue':
+                        return 'blue';
+                    case 'red':
+                        return 'red';
+                    case 'black':
+                        return 'black';
+                    default:
+                        return 'gray';
+                }
+            }
+
             // Load and display slopes
             $.getJSON(slopesUrl, function (data) {
                 var slopesLayer = L.geoJson(data, {
                     style: function (feature) {
                         return {
-                            color: feature.properties.color || 'blue', // default color if none provided
+                            color: getSlopeColor(feature.properties.difficulty),
                             weight: 5,
                             opacity: 1
                         };
@@ -92,7 +107,7 @@
                 var liftsLayer = L.geoJson(data, {
                     style: function (feature) {
                         return {
-                            color: feature.properties.color || 'black', // default color if none provided
+                            color: 'brown', // Sets the color to brown
                             weight: 3,
                             opacity: 1,
                             dashArray: '5, 5' // Sets the dashed line pattern
