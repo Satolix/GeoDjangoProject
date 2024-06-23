@@ -5,6 +5,7 @@ from django.contrib.gis.db import models
 class Slope(models.Model):
     name = models.CharField(max_length=100)
     difficulty = models.CharField(max_length=100, choices=[('green', 'green'), ('blue', 'blue'), ('red', 'red'), ('black', 'black')], default='green')
+    status = models.CharField(max_length=100, choices=[('open', 'open'), ('closed', 'closed')], default='closed')
     geom = models.LineStringField()
 
     class Meta:
@@ -17,6 +18,7 @@ class Slope(models.Model):
 class Lift(models.Model):
     name = models.CharField(max_length=100)
     capacity = models.IntegerField()
+    duration = models.IntegerField(default=1)
     geom = models.LineStringField()
 
     class Meta:
