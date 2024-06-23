@@ -6,5 +6,5 @@ urlpatterns = [
     path('map/', views.map, name='slopes'),
     path('slopes.json', views.slopesjson, name='slopesjson'),
     path('lifts.json', views.liftsjson, name='liftsjson'),
-    path('buildings.json', views.buildingsjson, name='buildingsjson'),
+    #path('buildings.json', views.buildingsjson, name='buildingsjson'),
 ]

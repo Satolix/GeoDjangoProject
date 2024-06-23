@@ -14,11 +14,13 @@ class Slope(models.Model):
 
     def __str__(self):
         return self.name
+    @property
+    def length(self):
+        return self.geom.length
 
 class Lift(models.Model):
     name = models.CharField(max_length=100)
     capacity = models.IntegerField()
-    duration = models.IntegerField(default=1)
     geom = models.LineStringField()
 
     class Meta:
@@ -27,16 +29,3 @@ class Lift(models.Model):
 
     def __str__(self):
         return self.name
-    
-class Building(models.Model):
-    name = models.CharField(max_length=100)
-    type = models.CharField(max_length=100, choices=[('restaurant', 'restaurant'), ('liftstation', 'liftstation'), ('shop', 'shop'), ('toilet', 'toilet')], default='restaurant')
-    geom = models.PointField()
-
-    class Meta:
-        db_table = 'buildings'
-        verbose_name_plural = "buildings"
-
-    def __str__(self):
-        return self.name
-
