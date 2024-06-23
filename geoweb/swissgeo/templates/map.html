@@ -13,28 +13,59 @@
 </head>
 <body>
     {% leaflet_map "map" callback="main_map_init" %}
+    <input type="hidden" id="slopes-json-url" value="{% url 'slopesjson' %}">
+    <input type="hidden" id="lifts-json-url" value="{% url 'liftsjson' %}">
+    <input type="hidden" id="buildings-json-url" value="{% url 'buildingsjson' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript">
+    <script>
         function main_map_init(map, options) {
-            var dataurl = '{% url "slopesjson" %}';
-            $.getJSON(dataurl, function (data) {
-                var geojsonLayer = L.geoJson(data, {
+            var slopesUrl = document.getElementById('slopes-json-url').value;
+            var liftsUrl = document.getElementById('lifts-json-url').value;
+            var buildingsUrl = document.getElementById('buildings-json-url').value;
+
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+                var R = 6371; // Radius of the earth in km
+                var dLat = (lat2 - lat1) * Math.PI / 180;
+                var dLon = (lon2 - lon1) * Math.PI / 180;
+                var a = 
+                    0.5 - Math.cos(dLat)/2 + 
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                    (1 - Math.cos(dLon))/2;
+
+                return R * 2 * Math.asin(Math.sqrt(a));
+            }
+
+            function calculateLength(geometry) {
+                var coordinates = geometry.coordinates;
+                var length = 0;
+                for (var i = 0; i < coordinates.length - 1; i++) {
+                    var latlng1 = [coordinates[i][1], coordinates[i][0]];
+                    var latlng2 = [coordinates[i + 1][1], coordinates[i + 1][0]];
+                    length += calculateDistance(latlng1[0], latlng1[1], latlng2[0], latlng2[1]);
+                }
+                return length;
+            }
+
+            // Load and display slopes
+            $.getJSON(slopesUrl, function (data) {
+                var slopesLayer = L.geoJson(data, {
                     style: function (feature) {
                         return {
                             color: feature.properties.color || 'blue', // default color if none provided
-                            weight: 5, // Increase stroke width for larger hitbox
+                            weight: 5,
                             opacity: 1
                         };
                     },
                     onEachFeature: function (feature, layer) {
+                        var length = calculateLength(feature.geometry);
                         if (feature.properties && feature.properties.name) {
                             layer.bindPopup(
                                 `<b>${feature.properties.name}</b><br>` +
-                                `Difficulty: ${feature.properties.difficulty}`
+                                `Difficulty: ${feature.properties.difficulty}<br>` +
+                                `Status: ${feature.properties.status}<br>` +
+                                `Length: ${length.toFixed(2)} km`
                             );
                         }
-
-                        // Add hover effect
                         layer.on('mouseover', function (e) {
                             var layer = e.target;
                             layer.setStyle({
@@ -46,15 +77,74 @@
                                 layer.bringToFront();
                             }
                         });
-
                         layer.on('mouseout', function (e) {
-                            geojsonLayer.resetStyle(e.target); // Reset to original style
+                            slopesLayer.resetStyle(e.target);
                         });
-
-                        // Ensure the click event works
                         layer.on('click', function (e) {
                             layer.openPopup();
                         });
+                    }
+                }).addTo(map);
+            });
+
+            // Load and display lifts
+            $.getJSON(liftsUrl, function (data) {
+                var liftsLayer = L.geoJson(data, {
+                    style: function (feature) {
+                        return {
+                            color: feature.properties.color || 'red', // default color if none provided
+                            weight: 3,
+                            opacity: 1
+                        };
+                    },
+                    onEachFeature: function (feature, layer) {
+                        var length = calculateLength(feature.geometry);
+                        if (feature.properties && feature.properties.name) {
+                            layer.bindPopup(
+                                `<b>${feature.properties.name}</b><br>` +
+                                `Type: ${feature.properties.type}<br>` +
+                                `Capacity: ${feature.properties.capacity}<br>` +
+                                `Status: ${feature.properties.status}<br>` +
+                                `Length: ${length.toFixed(2)} km`
+                            );
+                        }
+                        layer.on('mouseover', function (e) {
+                            var layer = e.target;
+                            layer.setStyle({
+                                weight: 5,
+                                color: 'yellow',
+                                opacity: 1
+                            });
+                            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                                layer.bringToFront();
+                            }
+                        });
+                        layer.on('mouseout', function (e) {
+                            liftsLayer.resetStyle(e.target);
+                        });
+                        layer.on('click', function (e) {
+                            layer.openPopup();
+                        });
+                    }
+                }).addTo(map);
+            });
+
+            // Load and display buildings
+            $.getJSON(buildingsUrl, function (data) {
+                var buildingsLayer = L.geoJson(data, {
+                    style: function (feature) {
+                        return {
+                            color: 'gray',
+                            fillOpacity: 0.5
+                        };
+                    },
+                    onEachFeature: function (feature, layer) {
+                        if (feature.properties && feature.properties.name) {
+                            layer.bindPopup(
+                                `<b>${feature.properties.name}</b><br>` +
+                                `Type: ${feature.properties.type}`
+                            );
+                        }
                     }
                 }).addTo(map);
             });

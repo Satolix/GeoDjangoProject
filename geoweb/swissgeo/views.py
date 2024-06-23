@@ -18,10 +18,10 @@ def slopesjson(request):
 
 def liftsjson(request):
     lifts_data = Lift.objects.all()
-    serializer = serialize('geojson', lifts_data, geometry_field='geom', fields=('name', 'capacity'))
+    serializer = serialize('geojson', lifts_data, geometry_field='geom', fields=('name', 'capacity', 'type', 'status'))
     return HttpResponse(serializer, content_type='application/json')
 
 def buildingsjson(request):
     buildings_data = Building.objects.all()
-    serializer = serialize('geojson', buildings_data, geometry_field='geom', fields=('name', 'type'))
+    serializer = serialize('geojson', buildings_data, geometry_field='geom', fields=('name', 'type', 'status'))
     return HttpResponse(serializer, content_type='application/json')
