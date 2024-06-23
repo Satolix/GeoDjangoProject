@@ -33,7 +33,7 @@ class Lift(models.Model):
         return self.name
 
 
-class Buildings(models.Model):
+class Building(models.Model):
     name = models.CharField(max_length=100)
     geom = models.PolygonField()
     type = models.CharField(max_length=100, choices=[('restaurant', 'restaurant'), ('hotel', 'hotel'), ('liftstation', 'liftstation')], default='restaurant')

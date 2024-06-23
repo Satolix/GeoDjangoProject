@@ -3,5 +3,5 @@ from .models import *
 
 admin.site.register(Slope, admin.OSMGeoAdmin)
 admin.site.register(Lift, admin.OSMGeoAdmin)
-#admin.site.register(Building, admin.OSMGeoAdmin)
+admin.site.register(Building, admin.OSMGeoAdmin)
 
