@@ -1,4 +1,4 @@
-from django.db import models
+
 from django.contrib.gis.db import models
 
 
@@ -15,7 +15,6 @@ class Slope(models.Model):
 
     def __str__(self):
         return self.name
-    @property
     def length(self):
         return self.geom.length
 
