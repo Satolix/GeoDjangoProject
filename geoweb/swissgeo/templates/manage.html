@@ -1,0 +1,61 @@
+{% extends 'header.html' %}
+
+{% block title %}Admin{% endblock %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'app.css' %}">
+
+{% block content %}
+<div class="vueContainer">
+    <h1>Admin</h1>
+    <p>Manage your slopes and lifts</p>
+    <div class="manage-info">
+        <div id="info" class="select"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function addListItem(container, name, status) {
+        const listItem = `<div class="info-column">
+                            <h4>${status === 'open' ? 'Open' : 'Closed'}</h4>
+                            <div class="item">
+                                <div class="name">${name}</div>
+                                <div class="open-status">
+                                    <label>
+                                        <input type="checkbox" data-name="${name}" data-status="${status === 'open'}">
+                                        ${status === 'open' ? 'Open' : 'Closed'}
+                                    </label>
+                                </div>
+                            </div>
+                          </div>`;
+        container.append(listItem);
+    }
+
+    $(document).ready(function() {
+        $.getJSON("{% url 'liftsjson' %}", function(data) {
+            const liftsListContainer = $('#info');
+            $.each(data.features, function(index, lift) {
+                addListItem(liftsListContainer, lift.properties.name, lift.properties.status);
+            });
+        });
+
+        $.getJSON("{% url 'slopesjson' %}", function(data) {
+            const slopesListContainer = $('#info');
+            $.each(data.features, function(index, slope) {
+                addListItem(slopesListContainer, slope.properties.name, slope.properties.status);
+            });
+        });
+
+        $('#info').on('click', 'input[type="checkbox"]', function() {
+            const name = $(this).data('name');
+            const isOpen = $(this).prop('checked');
+            console.log(`Updating ${name} to ${isOpen ? 'open' : 'closed'}`);
+            // @TODO update status with AJAX
+        });
+    });
+
+</script>
+{% include 'footer.html' %}
+{% endblock %}

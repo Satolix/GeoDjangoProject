@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Site{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'app.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+<header>
+    <div>
+        <img src="{% static 'Logo_thyon.png' %}" alt="Logo" class="logo">
+    </div>
+    <nav>
+        <ul>
+            <li><a href="{% url 'index' %}">HOME</a></li>
+            <li><a href="{% url 'map' %}">MAP</a></li>
+            <li><a href="{% url 'weather' %}">WEATHER</a></li>
+            <li><a href="{% url 'manage' %}">MANAGE</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    {% block content %}{% endblock %}
+    {% block extra_script %}{% endblock %}
+</main>
+
+</body>
+</html>

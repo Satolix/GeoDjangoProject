@@ -1,15 +1,19 @@
-# views.py
-from django.http import HttpResponse
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.core.serializers import serialize
-from .models import  Lift, Slope, Building
+from .models import Lift, Slope, Building
 
-# Create your views here.
 def index(request):
-    return HttpResponse("Hello, world. It works!")
+    return render(request, 'index.html')
 
 def map(request):
     return render(request, 'map.html')
+
+def weather(request):
+    return render(request, 'weather.html')
+
+def manage(request):
+    return render(request, 'manage.html')
 
 def slopesjson(request):
     slopes_data = Slope.objects.all()

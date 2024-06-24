@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -57,7 +57,7 @@ ROOT_URLCONF = 'geoweb.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Add this line to specify your template directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,6 +69,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'geoweb.wsgi.application'
 
@@ -125,6 +126,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -132,9 +137,22 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Leaflet settings
+# leaflet Module
 LEAFLET_CONFIG = {
-    'DEFAULT_CENTER': (46.8, 8.2),
-    'DEFAULT_ZOOM': 8,
+    'DEFAULT_CENTER': (46.8182, 8.2275),  # Centered on Switzerland
+    'DEFAULT_ZOOM': 18,
     'MIN_ZOOM': 3,
-    'MAX_ZOOM': 18,
+    'MAX_ZOOM': 20,
+    'SCALE': 'both',
+    'ATTRIBUTION_PRIFIX': 'tekson',
+    'RESET_VIEW': False,
+    'TILES': [('OpenStreetMap', 'http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        'attribution': '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    }),
+              ('Dark Map', 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                  'attribution': '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                  'subdomains': 'abcd',
+                  'maxZoom': 19
+              })],
 }
+

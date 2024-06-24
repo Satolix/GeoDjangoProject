@@ -1,0 +1,61 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block title %}Weather{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'app.css' %}">
+<style>
+    .container {
+        margin: 20px;
+    }
+
+    @media only screen and (max-width: 992px) {
+        .container {
+            min-width: 80vw;
+            min-height: 600px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Weather Page</h1>
+
+<div class="weather-container">
+    <canvas id="weatherChart" width="400" height="400"></canvas>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+<script>
+    <!--to update based on either -->
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('weatherChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'Temperature',
+                    data: [10, 20, 15, 25, 18, 30, 22],
+                    borderColor: 'blue',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% include 'footer.html' %}
+{% endblock %}

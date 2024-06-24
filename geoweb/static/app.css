@@ -1,0 +1,223 @@
+header {
+    background-color: white;
+    color: #000066 ;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+header .logo {
+    width: 100px;
+    margin-left: 20px;
+}
+body {
+    font-family: Din, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+footer {
+    background-color: #000066;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
+    bottom: 0;
+}
+#map {
+    height: 500px;
+    width: 100%;
+}
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+nav ul li a {
+    text-decoration: none;
+    color: #000066;
+    background: white;
+    padding: 10px;
+    border: 2px solid #000066 !important;
+    border-radius: 10px;
+    display: inline-block;
+    transition: all 0.1s ease 0s;
+}
+nav ul li a:hover {
+    color: #ff0000 !important;
+    border-radius: 20px;
+    border-color: #ff0000 !important;
+    transition: all 0.1s ease 0s;
+}
+main {
+    padding: 20px;
+}
+h1, h2 {
+    color: #333;
+}
+ul {
+    padding: 0;
+    list-style-type: none;
+}
+li {
+    margin: 5px 0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+li .status-icon {
+    margin-right: 10px;
+}
+.open {
+    color: green;
+}
+.closed {
+    color: red;
+}
+@media only screen and (max-width: 992px) {
+    .container {
+        min-width: 80vw;
+        min-height: 600px;
+    }
+}
+.container {
+    background-color: #000066;
+    color: white;
+    padding: 10px 0;
+}
+.row {
+    margin: 10px;
+}
+
+.filter-buttons {
+    margin: 10px 0;
+    text-align: center;
+}
+.filter-button {
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    background-color: #000066;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+.filter-button:hover {
+    border-radius: 20px;
+    border-color: #ff0000 !important;
+    transition: all 0.1s ease 0s;
+}
+.filter-button.active {
+    background-color: red;
+    color: white;
+}
+
+/* manage.html */
+.select {
+    display: flex;
+    justify-content: space-between;
+}
+.info-column {
+    flex: 1;
+    margin-right: 1rem;
+}
+.item {
+    margin-bottom: 1rem;
+}
+.name {
+    font-weight: bold;
+}
+.open-status {
+    margin-top: 0.5rem;
+}
+.manage-info {
+    display: flex;
+    margin-left: 40px;
+}
+.vueContainer {
+    margin: 20px;
+}
+h1 {
+    color: #000066;
+    margin-left: 20px;
+}
+h4 {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+p {
+    color: #000066;
+    margin-left: 20px;
+    margin-bottom: 0px;
+}
+.vueContainer {
+    margin: 20px;
+    margin-bottom: 0px;
+    overflow-y: auto;
+}
+.vueContainer::-webkit-scrollbar {
+    background-color: transparent;
+}
+#info {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 492.15px;
+}
+.info-column {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    min-width: 80%;
+    margin-left: 20px;
+}
+#info * {
+    margin: 0;
+}
+@media only screen and (max-width: 992px) {
+    .mapAndInfo {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .vueContainer {
+        margin-bottom: 0px;
+        margin: 20px;
+        overflow-y: auto;
+    }
+}
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s;
+}
+input[type="checkbox"]:before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: left 0.3s;
+}
+input[type="checkbox"]:checked {
+    background-color: #000066;
+}
+
+input[type="checkbox"]:checked:before {
+    left: 18px;
+}
+

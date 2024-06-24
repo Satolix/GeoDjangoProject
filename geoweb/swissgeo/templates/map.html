@@ -1,256 +1,238 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Map Filters</title>
-    {% load leaflet_tags %}
-    {% leaflet_js %}
-    {% leaflet_css %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-        integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        #map {
-            height: 500px;
-            width: 100%;
-        }
-        .filter-buttons {
-            margin: 10px 0;
-            text-align: center;
-        }
-        .filter-button {
-            padding: 10px;
-            margin: 5px;
-            cursor: pointer;
-            background-color: #f0f0f0;
-            border: none;
-            border-radius: 5px;
-        }
-        .filter-button.active {
-            background-color: #007bff;
-            color: white;
-        }
-    </style>
-</head>
-<body>
-    <main>
-        <div class="filter-buttons">
-            <button class="filter-button active" data-type="all">All</button>
-            <button class="filter-button" data-type="slopes">Slopes</button>
-            <button class="filter-button" data-type="lifts">Lifts</button>
-            <button class="filter-button" data-type="buildings">Buildings</button>
-        </div>
-        <div id="map"></div>
-    </main>
+{% extends 'header.html' %}
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var map = L.map('map').setView([46.8182, 8.2275], 8); // Centered on Switzerland
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution: '© OpenStreetMap'
-            }).addTo(map);
+{% block title %}Map Filters{% endblock %}
+{% load static %}
+{% block extra_head %}
+{% load leaflet_tags %}
+{% leaflet_js %}
+{% leaflet_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="{% static 'app.css' %}">
+{% endblock %}
 
-            var slopesUrl = "{% url 'slopesjson' %}";
-            var liftsUrl = "{% url 'liftsjson' %}";
-            var buildingsUrl = "{% url 'buildingsjson' %}";
+{% block content %}
+<div class="filter-buttons">
+    <button class="filter-button active" data-type="all">All</button>
+    <button class="filter-button" data-type="slopes">Slopes</button>
+    <button class="filter-button" data-type="lifts">Lifts</button>
+    <button class="filter-button" data-type="buildings">Buildings</button>
+</div>
+<div id="map"></div>
+<!-- @TODO PUT HERE INFOS ABOUT CALCULATION AND ALL -->
+<div class="">
 
-            var slopesLayer = L.layerGroup();
-            var liftsLayer = L.layerGroup();
-            var buildingsLayer = L.layerGroup();
+</div>
+{% endblock %}
 
-            function calculateDistance(lat1, lon1, lat2, lon2) {
-                var R = 6371; // Radius of the earth in km
-                var dLat = (lat2 - lat1) * Math.PI / 180;
-                var dLon = (lon2 - lon1) * Math.PI / 180;
-                var a = 
-                    0.5 - Math.cos(dLat) / 2 + 
-                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+{% block extra_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var map = L.map('map').setView([46.1835, 7.3727], 14); // Centered on Thyon :)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        var slopesUrl = "{% url 'slopesjson' %}";
+        var liftsUrl = "{% url 'liftsjson' %}";
+        var buildingsUrl = "{% url 'buildingsjson' %}";
+
+        var slopesLayer = L.layerGroup();
+        var liftsLayer = L.layerGroup();
+        var buildingsLayer = L.layerGroup();
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            var R = 6371; // Radius of the earth in km
+            var dLat = (lat2 - lat1) * Math.PI / 180;
+            var dLon = (lon2 - lon1) * Math.PI / 180;
+            var a =
+                    0.5 - Math.cos(dLat) / 2 +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                     (1 - Math.cos(dLon)) / 2;
 
-                return R * 2 * Math.asin(Math.sqrt(a));
-            }
+            return R * 2 * Math.asin(Math.sqrt(a));
+        }
 
-            function calculateLength(geometry) {
-                var coordinates = geometry.coordinates;
-                var length = 0;
-                for (var i = 0; i < coordinates.length - 1; i++) {
-                    var latlng1 = [coordinates[i][1], coordinates[i][0]];
-                    var latlng2 = [coordinates[i + 1][1], coordinates[i + 1][0]];
-                    length += calculateDistance(latlng1[0], latlng1[1], latlng2[0], latlng2[1]);
+        function calculateLength(geometry) {
+            var coordinates = geometry.coordinates;
+            var length = 0;
+            for (var i = 0; i < coordinates.length - 1; i++) {
+                var latlng1 = [coordinates[i][1], coordinates[i][0]];
+                var latlng2 = [coordinates[i + 1][1], coordinates[i + 1][0]];
+                length += calculateDistance(latlng1[0], latlng1[1], latlng2[0], latlng2[1]);
+            }
+            return length;
+        }
+
+        function getSlopeColor(difficulty) {
+            switch(difficulty) {
+                case 'green':
+                    return 'green';
+                case 'blue':
+                    return 'blue';
+                case 'red':
+                    return 'red';
+                case 'black':
+                    return 'black';
+                default:
+                    return 'gray';
+            }
+        }
+
+        function addHoverEffect(layer, defaultStyle) {
+            layer.on('mouseover', function(e) {
+                var targetLayer = e.target;
+                targetLayer.setStyle({
+                    weight: 7,
+                    color: 'yellow',
+                    opacity: 1
+                });
+                if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                    targetLayer.bringToFront();
                 }
-                return length;
-            }
+            });
+            layer.on('mouseout', function(e) {
+                layer.setStyle(defaultStyle);
+            });
+        }
 
-            function getSlopeColor(difficulty) {
-                switch(difficulty) {
-                    case 'green':
-                        return 'green';
-                    case 'blue':
-                        return 'blue';
-                    case 'red':
-                        return 'red';
-                    case 'black':
-                        return 'black';
-                    default:
-                        return 'gray';
-                }
-            }
-
-            function addHoverEffect(layer, defaultStyle) {
-                layer.on('mouseover', function(e) {
-                    var targetLayer = e.target;
-                    targetLayer.setStyle({
-                        weight: 7,
-                        color: 'yellow',
+        function createSlopesLayer(data) {
+            L.geoJson(data, {
+                style: function (feature) {
+                    var defaultStyle = {
+                        color: getSlopeColor(feature.properties.difficulty),
+                        weight: 5,
                         opacity: 1
-                    });
-                    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-                        targetLayer.bringToFront();
-                    }
-                });
-                layer.on('mouseout', function(e) {
-                    layer.setStyle(defaultStyle);
-                });
-            }
-
-            function createSlopesLayer(data) {
-                L.geoJson(data, {
-                    style: function (feature) {
-                        var defaultStyle = {
-                            color: getSlopeColor(feature.properties.difficulty),
-                            weight: 5,
-                            opacity: 1
-                        };
-                        return defaultStyle;
-                    },
-                    onEachFeature: function (feature, layer) {
-                        var length = calculateLength(feature.geometry);
-                        if (feature.properties && feature.properties.name) {
-                            layer.bindPopup(
+                    };
+                    return defaultStyle;
+                },
+                onEachFeature: function (feature, layer) {
+                    var length = calculateLength(feature.geometry);
+                    if (feature.properties && feature.properties.name) {
+                        layer.bindPopup(
                                 `<b>${feature.properties.name}</b><br>` +
                                 `Difficulty: ${feature.properties.difficulty}<br>` +
                                 `Status: ${feature.properties.status}<br>` +
                                 `Length: ${length.toFixed(2)} km`
-                            );
-                        }
-                        var defaultStyle = {
-                            color: getSlopeColor(feature.properties.difficulty),
-                            weight: 5,
-                            opacity: 1
-                        };
-                        addHoverEffect(layer, defaultStyle);
-                        slopesLayer.addLayer(layer);
+                        );
                     }
-                });
-            }
+                    var defaultStyle = {
+                        color: getSlopeColor(feature.properties.difficulty),
+                        weight: 5,
+                        opacity: 1
+                    };
+                    addHoverEffect(layer, defaultStyle);
+                    slopesLayer.addLayer(layer);
+                }
+            });
+        }
 
-            function createLiftsLayer(data) {
-                L.geoJson(data, {
-                    style: function (feature) {
-                        var defaultStyle = {
-                            color: 'brown', // Sets the color to brown
-                            weight: 3,
-                            opacity: 1,
-                            dashArray: '5, 5' // Sets the dashed line pattern
-                        };
-                        return defaultStyle;
-                    },
-                    onEachFeature: function (feature, layer) {
-                        var length = calculateLength(feature.geometry);
-                        if (feature.properties && feature.properties.name) {
-                            layer.bindPopup(
+        function createLiftsLayer(data) {
+            L.geoJson(data, {
+                style: function (feature) {
+                    var defaultStyle = {
+                        color: 'black',
+                        weight: 3,
+                        opacity: 1,
+                        dashArray: '5, 5'
+                    };
+                    return defaultStyle;
+                },
+                onEachFeature: function (feature, layer) {
+                    var length = calculateLength(feature.geometry);
+                    if (feature.properties && feature.properties.name) {
+                        layer.bindPopup(
                                 `<b>${feature.properties.name}</b><br>` +
                                 `Type: ${feature.properties.type}<br>` +
                                 `Capacity: ${feature.properties.capacity}<br>` +
                                 `Status: ${feature.properties.status}<br>` +
                                 `Length: ${length.toFixed(2)} km`
-                            );
-                        }
-                        var defaultStyle = {
-                            color: 'brown',
-                            weight: 3,
-                            opacity: 1,
-                            dashArray: '5, 5'
-                        };
-                        addHoverEffect(layer, defaultStyle);
-                        liftsLayer.addLayer(layer);
+                        );
                     }
-                });
-            }
+                    var defaultStyle = {
+                        color: 'brown',
+                        weight: 3,
+                        opacity: 1,
+                        dashArray: '5, 5'
+                    };
+                    addHoverEffect(layer, defaultStyle);
+                    liftsLayer.addLayer(layer);
+                }
+            });
+        }
 
-            function createBuildingsLayer(data) {
-                L.geoJson(data, {
-                    style: function (feature) {
-                        var defaultStyle = {
-                            color: 'gray',
-                            fillOpacity: 0.5
-                        };
-                        return defaultStyle;
-                    },
-                    onEachFeature: function (feature, layer) {
-                        if (feature.properties && feature.properties.name) {
-                            layer.bindPopup(
+        function createBuildingsLayer(data) {
+            L.geoJson(data, {
+                style: function (feature) {
+                    var defaultStyle = {
+                        color: 'green',
+                        fillOpacity: 0.5
+                    };
+                    return defaultStyle;
+                },
+                onEachFeature: function (feature, layer) {
+                    if (feature.properties && feature.properties.name) {
+                        layer.bindPopup(
                                 `<b>${feature.properties.name}</b><br>` +
                                 `Type: ${feature.properties.type}`
-                            );
-                        }
-                        var defaultStyle = {
-                            color: 'gray',
-                            fillOpacity: 0.5
-                        };
-                        addHoverEffect(layer, defaultStyle);
-                        buildingsLayer.addLayer(layer);
+                        );
                     }
-                });
-            }
-
-            // Load and display slopes
-            $.getJSON(slopesUrl, function (data) {
-                createSlopesLayer(data);
-                map.addLayer(slopesLayer); // Add slopes layer to map initially
-            });
-
-            // Load and display lifts
-            $.getJSON(liftsUrl, function (data) {
-                createLiftsLayer(data);
-                map.addLayer(liftsLayer); // Add lifts layer to map initially
-            });
-
-            // Load and display buildings
-            $.getJSON(buildingsUrl, function (data) {
-                createBuildingsLayer(data);
-                map.addLayer(buildingsLayer); // Add buildings layer to map initially
-            });
-
-            // Filter functionality
-            $('.filter-button').click(function() {
-                $('.filter-button').removeClass('active');
-                $(this).addClass('active');
-                var type = $(this).data('type');
-                filterLayers(type);
-            });
-
-            function filterLayers(type) {
-                map.removeLayer(slopesLayer);
-                map.removeLayer(liftsLayer);
-                map.removeLayer(buildingsLayer);
-
-                if (type === 'all') {
-                    map.addLayer(slopesLayer);
-                    map.addLayer(liftsLayer);
-                    map.addLayer(buildingsLayer);
-                } else if (type === 'slopes') {
-                    map.addLayer(slopesLayer);
-                } else if (type === 'lifts') {
-                    map.addLayer(liftsLayer);
-                } else if (type === 'buildings') {
-                    map.addLayer(buildingsLayer);
+                    var defaultStyle = {
+                        color: 'gray',
+                        fillOpacity: 0.5
+                    };
+                    addHoverEffect(layer, defaultStyle);
+                    buildingsLayer.addLayer(layer);
                 }
-            }
+            });
+        }
+
+        // Load and display slopes
+        $.getJSON(slopesUrl, function (data) {
+            createSlopesLayer(data);
+            map.addLayer(slopesLayer);
         });
-    </script>
-</body>
-</html>
+
+        // Load and display lifts
+        $.getJSON(liftsUrl, function (data) {
+            createLiftsLayer(data);
+            map.addLayer(liftsLayer);
+        });
+
+        // Load and display buildings
+        $.getJSON(buildingsUrl, function (data) {
+            createBuildingsLayer(data);
+            map.addLayer(buildingsLayer);
+        });
+
+        // Filter functionality
+        $('.filter-button').click(function() {
+            $('.filter-button').removeClass('active');
+            $(this).addClass('active');
+            var type = $(this).data('type');
+            filterLayers(type);
+        });
+
+        function filterLayers(type) {
+            map.removeLayer(slopesLayer);
+            map.removeLayer(liftsLayer);
+            map.removeLayer(buildingsLayer);
+
+            if (type === 'all') {
+                map.addLayer(slopesLayer);
+                map.addLayer(liftsLayer);
+                map.addLayer(buildingsLayer);
+            } else if (type === 'slopes') {
+                map.addLayer(slopesLayer);
+            } else if (type === 'lifts') {
+                map.addLayer(liftsLayer);
+            } else if (type === 'buildings') {
+                map.addLayer(buildingsLayer);
+            }
+        }
+    });
+</script>
+{% include 'footer.html' %}
+{% endblock %}
+
