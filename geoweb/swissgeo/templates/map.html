@@ -18,9 +18,9 @@
     <button class="filter-button" data-type="buildings">Buildings</button>
 </div>
 <div id="map"></div>
-<!-- @TODO PUT HERE INFOS ABOUT CALCULATION AND ALL -->
-<div class="">
-
+<!-- Section to display total ridable kilometers -->
+<div id="total-kilometers" class="total-kilometers">
+    Total Ridable Kilometers: <span id="total-km">0</span> km
 </div>
 {% endblock %}
 
@@ -41,6 +41,7 @@
         var slopesLayer = L.layerGroup();
         var liftsLayer = L.layerGroup();
         var buildingsLayer = L.layerGroup();
+        var slopesData = [];
 
         function calculateDistance(lat1, lon1, lat2, lon2) {
             var R = 6371; // Radius of the earth in km
@@ -98,6 +99,7 @@
         }
 
         function createSlopesLayer(data) {
+            slopesData = data.features;
             L.geoJson(data, {
                 style: function (feature) {
                     var defaultStyle = {
@@ -109,6 +111,7 @@
                 },
                 onEachFeature: function (feature, layer) {
                     var length = calculateLength(feature.geometry);
+                    feature.properties.length = length; // Store length in properties
                     if (feature.properties && feature.properties.name) {
                         layer.bindPopup(
                                 `<b>${feature.properties.name}</b><br>` +
@@ -188,10 +191,21 @@
             });
         }
 
+        function calculateTotalKilometers() {
+            var totalKilometers = slopesData.reduce(function(sum, slope) {
+                if (slope.properties.status === 'open') {
+                    return sum + slope.properties.length;
+                }
+                return sum;
+            }, 0);
+            $('#total-km').text(totalKilometers.toFixed(2));
+        }
+
         // Load and display slopes
         $.getJSON(slopesUrl, function (data) {
             createSlopesLayer(data);
             map.addLayer(slopesLayer);
+            calculateTotalKilometers(); // Calculate total kilometers initially
         });
 
         // Load and display lifts
@@ -235,4 +249,3 @@
 </script>
 {% include 'footer.html' %}
 {% endblock %}
-
