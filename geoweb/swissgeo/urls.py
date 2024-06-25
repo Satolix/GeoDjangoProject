@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import update_status
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -9,4 +10,5 @@ urlpatterns = [
     path('slopes.json', views.slopesjson, name='slopesjson'),
     path('lifts.json', views.liftsjson, name='liftsjson'),
     path('buildings.json', views.buildingsjson, name='buildingsjson'),
+    path('update_status/', update_status, name='update_status'),
 ]

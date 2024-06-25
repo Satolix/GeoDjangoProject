@@ -5,11 +5,16 @@
 <link rel="stylesheet" href="{% static 'app.css' %}">
 
 {% block content %}
-<div class="vueContainer">
-    <h1>Admin</h1>
-    <p>Manage your slopes and lifts</p>
+<div class="manageContainer">
+    <h1>ADMIN</h1>
+    <p>Open or close slopes and lifts</p>
     <div class="manage-info">
-        <div id="info" class="select"></div>
+        <div id="lifts-container" class="info-category">
+            <h2>Lifts</h2>
+        </div>
+        <div id="slopes-container" class="info-category">
+            <h2>Slopes</h2>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -19,13 +24,11 @@
 <script>
     function addListItem(container, name, status) {
         const listItem = `<div class="info-column">
-                            <h4>${status === 'open' ? 'Open' : 'Closed'}</h4>
                             <div class="item">
                                 <div class="name">${name}</div>
                                 <div class="open-status">
                                     <label>
-                                        <input type="checkbox" data-name="${name}" data-status="${status === 'open'}">
-                                        ${status === 'open' ? 'Open' : 'Closed'}
+                                        <input type="checkbox" data-name="${name}" ${status === 'open' ? 'checked' : ''}>
                                     </label>
                                 </div>
                             </div>
@@ -34,28 +37,79 @@
     }
 
     $(document).ready(function() {
-        $.getJSON("{% url 'liftsjson' %}", function(data) {
-            const liftsListContainer = $('#info');
-            $.each(data.features, function(index, lift) {
-                addListItem(liftsListContainer, lift.properties.name, lift.properties.status);
-            });
-        });
+        function loadAndRenderData(url, containerId, title) {
+            $.getJSON(url, function(data) {
+                const container = $(containerId);
+                container.empty().append(`<h2>${title}</h2>`);
 
-        $.getJSON("{% url 'slopesjson' %}", function(data) {
-            const slopesListContainer = $('#info');
-            $.each(data.features, function(index, slope) {
-                addListItem(slopesListContainer, slope.properties.name, slope.properties.status);
-            });
-        });
+                data.features.sort((a, b) => a.properties.name.localeCompare(b.properties.name));
 
-        $('#info').on('click', 'input[type="checkbox"]', function() {
+                $.each(data.features, function(index, item) {
+                    addListItem(container, item.properties.name, item.properties.status);
+                });
+            });
+        }
+
+        loadAndRenderData("{% url 'liftsjson' %}", '#lifts-container', 'Lifts');
+        loadAndRenderData("{% url 'slopesjson' %}", '#slopes-container', 'Slopes');
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+        function updateStatus(url, name, isOpen, statusLabel, type) {
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: { 'X-CSRFToken': csrftoken },
+                data: {
+                    name: name,
+                    status: isOpen ? 'open' : 'closed',
+                    type: type
+                },
+                success: function(response) {
+                    console.log(`Successfully updated ${type} ${name} to ${isOpen ? 'open' : 'closed'}`);
+                },
+                error: function(xhr, status, error) {
+                    console.error(`Failed to update ${type} ${name}: ${status} - ${error}`);
+                    $(this).prop('checked', !isOpen);
+                }
+            });
+        }
+
+        $('#lifts-container, #slopes-container').on('click', 'input[type="checkbox"]', function() {
             const name = $(this).data('name');
             const isOpen = $(this).prop('checked');
-            console.log(`Updating ${name} to ${isOpen ? 'open' : 'closed'}`);
-            // @TODO update status with AJAX
+            const statusLabel = $(this).next('span');
+            let type = '';
+
+            if ($(this).closest('#lifts-container').length > 0) {
+                type = 'lift';
+            } else if ($(this).closest('#slopes-container').length > 0) {
+                type = 'slope';
+            }
+
+            if (type) {
+                updateStatus('{% url "update_status" %}', name, isOpen, statusLabel, type);
+            } else {
+                console.error('Unknown item type');
+            }
         });
     });
-
 </script>
+
 {% include 'footer.html' %}
 {% endblock %}
