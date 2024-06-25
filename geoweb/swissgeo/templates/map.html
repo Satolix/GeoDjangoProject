@@ -16,6 +16,7 @@
 {% endblock %}
 
 {% block content %}
+<h1>Facilities Map</h1>
 <div class="filter-buttons">
     <button class="filter-button active" data-type="all">All</button>
     <button class="filter-button" data-type="slopes">Slopes</button>
@@ -23,9 +24,6 @@
     <button class="filter-button" data-type="buildings">Buildings</button>
 </div>
 <div id="map"></div>
-<ul>
-    <li id="switch-layers" class="button">Switch Layers</li>
-</ul>
 <!-- Section to display total ridable kilometers -->
 <div id="total-kilometers" class="total-kilometers">
     Total Ridable Kilometers: <span id="total-km">0</span> km

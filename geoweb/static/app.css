@@ -27,14 +27,10 @@ footer {
     height: 500px;
     width: 100%;
 }
-.leaflet-control-layers {
-    background-color: white;
-    padding: 5px;
-}
 .map-button {
     cursor: pointer;
     padding: 6px 12px;
-    background-color: #007bff;
+    background-color: #000066;
     color: white;
     border: none;
     border-radius: 4px;
@@ -130,8 +126,6 @@ li .status-icon {
 }
 
 /* manage.html */
-/* General container styling */
-/* General container styling */
 .manageContainer {
     width: 80%;
     margin: auto;
@@ -257,6 +251,28 @@ input[type="checkbox"]:checked:before {
 .open-status input[type="checkbox"]:not(:checked) + span {
     color: #fff; /* White text when closed */
 }
-
 /* end manage.html */
+
+/* weather.html */
+.weather-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.chart {
+    width: 48%;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.chart h2 {
+    margin-bottom: 10px;
+}
+
+.chart canvas {
+    width: 100%;
+}
+/* end weather.html */
 
