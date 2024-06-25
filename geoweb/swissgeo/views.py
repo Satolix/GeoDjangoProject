@@ -46,22 +46,24 @@ def buildingsjson(request):
 def update_status(request):
     name = request.POST.get('name')
     status = request.POST.get('status')
+    type = request.POST.get('type')
 
     if status not in ['open', 'closed']:
         return JsonResponse({'error': 'Invalid status'}, status=400)
 
     try:
-        lift = Lift.objects.get(name=name)
-        lift.status = status
-        lift.save()
-        return JsonResponse({'success': True})
-    except Lift.DoesNotExist:
-        pass
-
-    try:
-        slope = Slope.objects.get(name=name)
-        slope.status = status
-        slope.save()
-        return JsonResponse({'success': True})
-    except Slope.DoesNotExist:
+        if type == 'lift':
+            lift = Lift.objects.get(name=name)
+            lift.status = status
+            lift.save()
+            return JsonResponse({'success': True})
+        elif type == 'slope':
+            slope = Slope.objects.get(name=name)
+            slope.status = status
+            slope.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'error': 'Invalid type'}, status=400)
+    except (Lift.DoesNotExist, Slope.DoesNotExist):
         return JsonResponse({'error': 'Invalid name'}, status=400)
+
