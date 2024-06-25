@@ -35,7 +35,6 @@ footer {
     border: none;
     border-radius: 4px;
 }
-
 nav ul {
     list-style-type: none;
     padding: 0;
@@ -101,7 +100,6 @@ li .status-icon {
 .row {
     margin: 10px;
 }
-
 .filter-buttons {
     margin: 10px 0;
     text-align: center;
@@ -125,6 +123,7 @@ li .status-icon {
     color: white;
 }
 
+
 /* manage.html */
 .manageContainer {
     width: 80%;
@@ -142,7 +141,6 @@ li .status-icon {
     margin-bottom: 20px;
 }
 
-/* Manage info container */
 .manage-info {
     display: flex;
     justify-content: space-between;
@@ -171,7 +169,6 @@ li .status-icon {
     padding-bottom: 10px;
 }
 
-/* Info column styling */
 .info-column {
     margin-bottom: 10px;
 }
@@ -200,7 +197,7 @@ li .status-icon {
 .info-column .open-status input[type="checkbox"] {
     margin-right: 10px;
 }
-/* General styling for checkboxes */
+
 input[type="checkbox"] {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -215,7 +212,6 @@ input[type="checkbox"] {
     transition: background-color 0.3s;
 }
 
-/* Slider knob styling */
 input[type="checkbox"]:before {
     content: "";
     position: absolute;
@@ -228,28 +224,25 @@ input[type="checkbox"]:before {
     transition: left 0.3s;
 }
 
-/* Checked state styles */
 input[type="checkbox"]:checked:before {
     left: calc(100% - 18px);
-    background-color: #fff; /* Knob color when checked */
+    background-color: #fff;
 }
 
-/* Open status styles */
 .open-status input[type="checkbox"]:checked {
-    background-color: #28a745; /* Green background when open */
+    background-color: #28a745;
 }
 
 .open-status input[type="checkbox"]:checked + span {
-    color: #fff; /* White text when open */
+    color: #fff;
 }
 
-/* Closed status styles */
 .open-status input[type="checkbox"]:not(:checked) {
-    background-color: #dc3545; /* Red background when closed */
+    background-color: #dc3545;
 }
 
 .open-status input[type="checkbox"]:not(:checked) + span {
-    color: #fff; /* White text when closed */
+    color: #fff;
 }
 /* end manage.html */
 
@@ -275,4 +268,129 @@ input[type="checkbox"]:checked:before {
     width: 100%;
 }
 /* end weather.html */
+
+
+
+/* map.html */
+.fa-skiing {
+    color: #0099ff;
+    margin-right: 10px;
+}
+
+.fa-check-circle {
+    color: green;
+    margin-right: 5px;
+}
+
+.fa-times-circle {
+    color: red;
+    margin-right: 5px;
+}
+
+.total-kilometers {
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.resort-status {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.resort-status .status-text {
+    margin-left: 10px;
+}
+
+.resort-status .status-icon {
+    margin-right: 5px;
+}
+
+.resort-status .status-text.closed {
+    color: red;
+}
+
+.resort-status .status-text.open {
+    color: green;
+}
+
+.info-sections {
+    display: flex;
+    margin-top: 20px;
+}
+
+.info-section {
+    flex: 1;
+    margin-right: 20px;
+    padding: 15px;
+    background: #e9e9e9;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.info-section:last-child {
+    margin-right: 0;
+}
+
+.info-section h3 {
+    margin-bottom: 10px;
+}
+
+ul li .status-icon {
+    margin-right: 10px;
+}
+
+/* Responsive adjustments */
+@media only screen and (max-width: 768px) {
+    .info-sections {
+        flex-direction: column;
+    }
+
+    .info-section {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+}
+/* index html*/
+
+/* map.html */
+.sections-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.section {
+    flex: 1;
+    margin-right: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.section h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+    .sections-container {
+        flex-direction: column;
+    }
+
+    .section {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+}
+
 

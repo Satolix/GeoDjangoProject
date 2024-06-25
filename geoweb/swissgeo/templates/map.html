@@ -24,11 +24,32 @@
     <button class="filter-button" data-type="buildings">Buildings</button>
 </div>
 <div id="map"></div>
-<!-- Section to display total ridable kilometers -->
 <div id="total-kilometers" class="total-kilometers">
-    Total Ridable Kilometers: <span id="total-km">0</span> km
+    <p>
+        <i class="fas fa-skiing"></i>
+        Total Ridable Kilometers: <span id="total-km">0</span> km
+    </p>
+    <p id="resort-status" class="resort-status">
+        <i class="status-icon"></i>
+    </p>
+    <div class="info-sections">
+        <div class="info-section">
+            <h3>Restaurants</h3>
+            <ul id="restaurants-list">
+                <!-- Restaurants -->
+            </ul>
+        </div>
+        <div class="info-section">
+            <h3>Hotels</h3>
+            <ul id="hotels-list">
+                <!-- Hotels -->
+            </ul>
+        </div>
+    </div>
 </div>
+
 {% endblock %}
+
 
 {% block extra_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -237,6 +258,12 @@
                 return sum;
             }, 0);
             $('#total-km').text(totalKilometers.toFixed(2));
+
+            if (totalKilometers <= 0) {
+                $('#resort-status').html('<i class="fas fa-times-circle status-icon"></i><span class="status-text closed"> The resort is closed at the moment.</span>');
+            } else {
+                $('#resort-status').html('<i class="fas fa-check-circle status-icon"></i><span class="status-text open"> The resort is open.</span>');
+            }
         }
 
         // Load and display slopes
@@ -283,6 +310,21 @@
                 map.addLayer(buildingsLayer);
             }
         }
+
+        // Fetch and categorize facilities
+        $.getJSON(buildingsUrl, function(data) {
+            var restaurantsList = $('#restaurants-list');
+            var hotelsList = $('#hotels-list');
+
+            data.features.forEach(function(facility) {
+                var listItem = `<li>${facility.properties.name}</li>`;
+                if (facility.properties.type === 'restaurant') {
+                    restaurantsList.append(listItem);
+                } else if (facility.properties.type === 'hotel') {
+                    hotelsList.append(listItem);
+                }
+            });
+        });
     });
 </script>
 {% include 'footer.html' %}

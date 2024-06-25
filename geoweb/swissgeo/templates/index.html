@@ -13,28 +13,34 @@
 <h1>Welcome to Thyon Ski Resort</h1>
 <p>Find here an overview of open and closed installations. For more, click here (put button here)</p>
 
-<h2>Open Lifts</h2>
-<ul id="lifts-list-open">
-    <!-- Lifts -->
-</ul>
-
-<h2>Closed Lifts</h2>
-<ul id="lifts-list-closed">
-    <!-- Closed Lifts -->
-</ul>
-
-<h2>Open Slopes</h2>
-<ul id="slopes-list-open">
-    <!-- Slopes -->
-</ul>
-
-<h2>Closed Slopes</h2>
-<ul id="slopes-list-closed">
-    <!-- Closed Slopes -->
-</ul>
-
-        <!-- @TODO display BETTER !!! -->
+<div class="sections-container">
+    <div class="section">
+        <h2>Open Lifts</h2>
+        <ul id="lifts-list-open">
+            <!-- Lifts -->
+        </ul>
+    </div>
+    <div class="section">
+        <h2>Closed Lifts</h2>
+        <ul id="lifts-list-closed">
+            <!-- Closed Lifts -->
+        </ul>
+    </div>
+    <div class="section">
+        <h2>Open Slopes</h2>
+        <ul id="slopes-list-open">
+            <!-- Slopes -->
+        </ul>
+    </div>
+    <div class="section">
+        <h2>Closed Slopes</h2>
+        <ul id="slopes-list-closed">
+            <!-- Closed Slopes -->
+        </ul>
+    </div>
+</div>
 {% endblock %}
+
 
 {% block extra_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
