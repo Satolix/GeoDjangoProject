@@ -7,7 +7,7 @@ This Project has been created in the context of the Course "GIS".
 
 # Installation Guide
 - Clone the git repository
-- Execute the docker-compose.yml
+- Execute the docker-compose.yml `docker-compose up`
 - Stop the web container (for now)
 - Connect to the pg_admin4_container using the identifiers in the docker-compose.yml
 - Connect the database server using db as name, postgresql as user and admin as password.
