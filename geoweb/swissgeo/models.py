@@ -15,9 +15,6 @@ class Slope(models.Model):
 
     def __str__(self):
         return self.name
-    def length(self):
-        return self.geom.length
-
 
 class Lift(models.Model):
     name = models.CharField(max_length=100)
