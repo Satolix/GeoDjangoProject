@@ -1,6 +1,6 @@
 {% extends 'header.html' %}
 
-{% block title %}Map Filters{% endblock %}
+{% block title %}Map{% endblock %}
 {% load static %}
 {% block extra_head %}
 {% load leaflet_tags %}
@@ -25,12 +25,12 @@
 </div>
 <div id="map"></div>
 <div id="total-kilometers" class="total-kilometers">
-    <p>
+    <p id="resort-status" class="resort-status centered-content">
+        <i class="status-icon"></i>
+    </p>
+    <p class="centered-content">
         <i class="fas fa-skiing"></i>
         Total Ridable Kilometers: <span id="total-km">0</span> km
-    </p>
-    <p id="resort-status" class="resort-status">
-        <i class="status-icon"></i>
     </p>
     <div class="info-sections">
         <div class="info-section">
@@ -219,6 +219,25 @@
                         dashArray: '5, 5'
                     };
                     addHoverEffect(layer, defaultStyle);
+
+                    // Add start and end markers
+                    var coordinates = feature.geometry.coordinates;
+                    var startCoord = coordinates[0];
+                    var endCoord = coordinates[coordinates.length - 1];
+
+                    var startMarker = L.marker([startCoord[1], startCoord[0]]).addTo(map).bindPopup(
+                        `<b>${feature.properties.name}</b><br>` +
+                            `Type: ${feature.properties.type}<br>` +
+                            `Capacity: ${feature.properties.capacity}<br>` +
+                            `Status: ${feature.properties.status}<br>` +
+                            `Length: ${length.toFixed(2)} km`);
+                    var endMarker = L.marker([endCoord[1], endCoord[0]]).addTo(map).bindPopup(
+                            `<b>${feature.properties.name}</b><br>` +
+                            `Type: ${feature.properties.type}<br>` +
+                            `Capacity: ${feature.properties.capacity}<br>` +
+                            `Status: ${feature.properties.status}<br>` +
+                            `Length: ${length.toFixed(2)} km`);;
+
                     liftsLayer.addLayer(layer);
                 }
             });
@@ -262,7 +281,7 @@
             if (totalKilometers <= 0) {
                 $('#resort-status').html('<i class="fas fa-times-circle status-icon"></i><span class="status-text closed"> The resort is closed at the moment.</span>');
             } else {
-                $('#resort-status').html('<i class="fas fa-check-circle status-icon"></i><span class="status-text open"> The resort is open.</span>');
+                $('#resort-status').html('<i class="fas fa-check-circle status-icon"></i><span class="status-text open"> The resort is open, enjoy !</span>');
             }
         }
 
@@ -311,21 +330,23 @@
             }
         }
 
-        // Fetch and categorize facilities
         $.getJSON(buildingsUrl, function(data) {
             var restaurantsList = $('#restaurants-list');
             var hotelsList = $('#hotels-list');
 
             data.features.forEach(function(facility) {
-                var listItem = `<li>${facility.properties.name}</li>`;
+                var listItem;
                 if (facility.properties.type === 'restaurant') {
+                    listItem = `<li><i class="fas fa-utensils"></i> ${facility.properties.name}</li>`;
                     restaurantsList.append(listItem);
                 } else if (facility.properties.type === 'hotel') {
+                    listItem = `<li><i class="fas fa-hotel"></i> ${facility.properties.name}</li>`;
                     hotelsList.append(listItem);
                 }
             });
         });
     });
 </script>
+
 {% include 'footer.html' %}
 {% endblock %}

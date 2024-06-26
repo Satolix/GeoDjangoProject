@@ -16,12 +16,16 @@ body {
     padding: 0;
 }
 footer {
+    margin-top: 20px;
     background-color: #000066;
     color: white;
     padding: 10px 0;
     text-align: center;
     width: 100%;
     bottom: 0;
+}
+h4 {
+    color: white;
 }
 #map {
     height: 500px;
@@ -64,7 +68,12 @@ main {
     padding: 20px;
 }
 h1, h2 {
-    color: #333;
+    text-align: center;
+    color: #000066;
+}
+p {
+    text-align: center;
+    color: #000066;
 }
 ul {
     padding: 0;
@@ -143,8 +152,11 @@ li .status-icon {
 
 .manage-info {
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .select {
@@ -156,7 +168,7 @@ li .status-icon {
     width: 33%;
     background: #f7f7f7;
     padding: 10px;
-    margin: 10px auto;
+    margin: 0;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
@@ -165,7 +177,6 @@ li .status-icon {
 #slopes-container h2 {
     text-align: center;
     color: #333;
-    border-bottom: 2px solid #ddd;
     padding-bottom: 10px;
 }
 
@@ -273,7 +284,15 @@ input[type="checkbox"]:checked:before {
 
 /* map.html */
 .fa-skiing {
-    color: #0099ff;
+    color: #06065D;
+    margin-right: 10px;
+}
+
+.fa-utensils {
+    margin-right: 10px;
+}
+
+.fa-hotel {
     margin-right: 10px;
 }
 
@@ -289,16 +308,14 @@ input[type="checkbox"]:checked:before {
 
 .total-kilometers {
     margin-top: 20px;
+    margin-bottom: 20px;
     padding: 15px;
-    background: white;
+    background: #f7f7f7;
     border: 1px solid #ddd;
     border-radius: 8px;
 }
 
 .resort-status {
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -320,6 +337,12 @@ input[type="checkbox"]:checked:before {
     color: green;
 }
 
+.centered-content {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
 .info-sections {
     display: flex;
     margin-top: 20px;
@@ -328,9 +351,8 @@ input[type="checkbox"]:checked:before {
 .info-section {
     flex: 1;
     margin-right: 20px;
-    padding: 15px;
-    background: #e9e9e9;
-    border: 1px solid #ccc;
+    padding: 15px;;
+    background: white;
     border-radius: 8px;
 }
 
@@ -346,20 +368,16 @@ ul li .status-icon {
     margin-right: 10px;
 }
 
-/* Responsive adjustments */
-@media only screen and (max-width: 768px) {
-    .info-sections {
-        flex-direction: column;
-    }
-
-    .info-section {
-        margin-right: 0;
-        margin-bottom: 20px;
-    }
+.image-container {
+    max-width: 100%;
+    overflow: hidden;
 }
-/* index html*/
 
-/* map.html */
+.image-container img {
+    width: 100%;
+    height: auto;
+}
+
 .sections-container {
     display: flex;
     flex-wrap: wrap;
@@ -371,7 +389,7 @@ ul li .status-icon {
     flex: 1;
     margin-right: 20px;
     padding: 15px;
-    background: #f9f9f9;
+    background: #f7f7f7;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-sizing: border-box;
