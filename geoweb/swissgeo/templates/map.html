@@ -220,25 +220,16 @@
                     };
                     addHoverEffect(layer, defaultStyle);
 
-                    // Add start and end markers
                     var coordinates = feature.geometry.coordinates;
                     var startCoord = coordinates[0];
                     var endCoord = coordinates[coordinates.length - 1];
 
-                    var startMarker = L.marker([startCoord[1], startCoord[0]]).addTo(map).bindPopup(
-                        `<b>${feature.properties.name}</b><br>` +
-                            `Type: ${feature.properties.type}<br>` +
-                            `Capacity: ${feature.properties.capacity}<br>` +
-                            `Status: ${feature.properties.status}<br>` +
-                            `Length: ${length.toFixed(2)} km`);
-                    var endMarker = L.marker([endCoord[1], endCoord[0]]).addTo(map).bindPopup(
-                            `<b>${feature.properties.name}</b><br>` +
-                            `Type: ${feature.properties.type}<br>` +
-                            `Capacity: ${feature.properties.capacity}<br>` +
-                            `Status: ${feature.properties.status}<br>` +
-                            `Length: ${length.toFixed(2)} km`);;
+                    var startMarker = L.marker([startCoord[1], startCoord[0]]);
+                    var endMarker = L.marker([endCoord[1], endCoord[0]]);
 
                     liftsLayer.addLayer(layer);
+                    liftsLayer.addLayer(startMarker);
+                    liftsLayer.addLayer(endMarker);
                 }
             });
         }
