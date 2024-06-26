@@ -17,4 +17,4 @@ This Project has been created in the context of the Course "GIS".
 - You can now access localhost:8000/swissgeo
 
 
-![Test](ReadMePictures\Docker.png)
+![Test](ReadMePictures/Docker.png)
