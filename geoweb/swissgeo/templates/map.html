@@ -56,7 +56,7 @@
 <script>
     const key = 'ZAKOxwMuRDTYP33EoZv0';
     document.addEventListener("DOMContentLoaded", function() {
-        var map = L.map('map').setView([46.1835, 7.3727], 14); // Centered on Thyon :)
+        var map = L.map('map').setView([46.1845, 7.3727], 14); // Centered on Thyon :)
 
         var tilelayer1 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
@@ -203,15 +203,17 @@
                 },
                 onEachFeature: function (feature, layer) {
                     var length = calculateLength(feature.geometry);
+                    var popupContent =
+                            `<b>${feature.properties.name}</b><br>` +
+                            `Type: ${feature.properties.type}<br>` +
+                            `Capacity: ${feature.properties.capacity}<br>` +
+                            `Status: ${feature.properties.status}<br>` +
+                            `Length: ${length.toFixed(2)} km`;
+
                     if (feature.properties && feature.properties.name) {
-                        layer.bindPopup(
-                                `<b>${feature.properties.name}</b><br>` +
-                                `Type: ${feature.properties.type}<br>` +
-                                `Capacity: ${feature.properties.capacity}<br>` +
-                                `Status: ${feature.properties.status}<br>` +
-                                `Length: ${length.toFixed(2)} km`
-                        );
+                        layer.bindPopup(popupContent);
                     }
+
                     var defaultStyle = {
                         color: 'brown',
                         weight: 3,
@@ -227,6 +229,9 @@
                     var startMarker = L.marker([startCoord[1], startCoord[0]]);
                     var endMarker = L.marker([endCoord[1], endCoord[0]]);
 
+                    startMarker.bindPopup(popupContent);
+                    endMarker.bindPopup(popupContent);
+
                     liftsLayer.addLayer(layer);
                     liftsLayer.addLayer(startMarker);
                     liftsLayer.addLayer(endMarker);
@@ -234,11 +239,12 @@
             });
         }
 
+
         function createBuildingsLayer(data) {
             L.geoJson(data, {
                 style: function (feature) {
                     var defaultStyle = {
-                        color: 'green',
+                        color: 'orange',
                         fillOpacity: 0.5
                     };
                     return defaultStyle;
@@ -251,7 +257,7 @@
                         );
                     }
                     var defaultStyle = {
-                        color: 'gray',
+                        color: 'orange',
                         fillOpacity: 0.5
                     };
                     addHoverEffect(layer, defaultStyle);
