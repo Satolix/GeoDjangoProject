@@ -3,7 +3,7 @@ This Project has been created in the context of the Course "GIS Python" in the H
 
 # Members
 - [Badertscher Janis](https://github.com/Satolix)
-- [Mabilliard Marie-Esthe](https://github.com/Esvaria)
+- [Mabillard Marie-Esther](https://github.com/Esvaria)
 
 # Installation Guide
 - Clone the git repository
